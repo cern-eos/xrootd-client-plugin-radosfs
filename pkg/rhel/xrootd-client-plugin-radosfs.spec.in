@@ -1,0 +1,63 @@
+%define _unpackaged_files_terminate_build 0
+Name:		xrootd-client-plugin-radosfs
+Version:	__VERSION_MAJOR__.__VERSION_MINOR__.__VERSION_PATCH__
+Release:	__RELEASE__
+Summary:	A radosfs plug-in to the XRootd client 
+Prefix:         /usr
+Group:		Applications/File
+License:	GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+Source:        %{name}-%{version}-%{release}.tar.gz
+BuildRoot:     %{_tmppath}/%{name}-root
+
+BuildRequires: cmake >= 2.6
+BuildRequires: radosfs-devel xrootd-client-devel
+
+%if %{?_EXTRA_REQUIRES:1}%{!?_EXTRA_REQUIRES:0}
+BuildRequires: %{_EXTRA_REQUIRES}
+Requires:      %{_EXTRA_REQUIRES}
+%endif
+
+Requires:      radosfs xrootd-client-libs
+
+%description
+A radosfs plug-in to the XRootd client 
+
+%prep
+%setup -n %{name}-%{version}-%{release}
+
+%build
+test -e $RPM_BUILD_ROOT && rm -r $RPM_BUILD_ROOT
+%if 0%{?rhel} && 0%{?rhel} < 6
+export CC=/usr/bin/gcc44 CXX=/usr/bin/g++44
+%endif
+
+mkdir -p build
+cd build
+
+%if %{?_BOOST_ROOT:1}%{!?_BOOST_ROOT:0}
+export BOOST_ROOT=%{_BOOST_ROOT} Boost_NO_SYSTEM_PATHS=ON
+%endif
+
+cmake ../ -DRELEASE=%{release} -DCMAKE_BUILD_TYPE=RelWithDebInfo
+%{__make} %{_smp_mflags}
+
+%install
+cd build
+%{__make} install DESTDIR=$RPM_BUILD_ROOT
+echo "Installed!"
+
+%post
+/sbin/ldconfig
+
+%postun
+/sbin/ldconfig
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root,-)
+%{_libdir}/libXrdClRadosFS-__PLUGIN_VERSION__.so
+%config(noreplace) %_sysconfdir/xrootd/client.plugins.d/radosfs.conf
+%_sysconfdir/xrootd/client.plugins.d/radosfs.conf
