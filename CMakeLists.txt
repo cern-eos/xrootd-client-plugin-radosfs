@@ -29,8 +29,6 @@ project( xrootd-client-plugin-radosfs )
 set( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/src ${PROJECT_SOURCE_DIR}/cmake
      ${PROJECT_SOURCE_DIR}/test )
 
-find_package(XRootD REQUIRED)
-
 if ( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
   set( CMAKE_INSTALL_PREFIX "/usr" CACHE PATH "Default install path" FORCE )
 endif ( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
