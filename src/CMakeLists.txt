@@ -17,6 +17,8 @@
 # for more details.
 
 find_package(XRootD REQUIRED)
+find_package(Boost REQUIRED COMPONENTS thread)
+
 #-------------------------------------------------------------------------------
 # The XrdCl lib
 #-------------------------------------------------------------------------------
