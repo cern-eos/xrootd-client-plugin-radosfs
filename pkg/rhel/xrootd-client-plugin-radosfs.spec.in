@@ -36,7 +36,7 @@ mkdir -p build
 cd build
 
 %if %{?_BOOST_ROOT:1}%{!?_BOOST_ROOT:0}
-export BOOST_ROOT=%{_BOOST_ROOT} Boost_NO_SYSTEM_PATHS=ON
+export BOOST_ROOT=%{_BOOST_ROOT} Boost_NO_SYSTEM_PATHS=TRUE
 %endif
 
 cmake ../ -DRELEASE=%{release} -DCMAKE_BUILD_TYPE=RelWithDebInfo
