@@ -872,12 +872,22 @@ namespace
                                      uint16_t           timeout )
       {
         XrdCl::Log *log = DefaultEnv::GetLog();
-        log->Debug( 1, "RadosFsFileSystem::Truncate" );
-	return XRootDStatus( XrdCl::stError,
-			     XrdCl::errOSError,
-			     EOPNOTSUPP,
-			     "radosfs error");
-	//        return pFileSystem->Truncate( path, size, handler, timeout );
+        log->Debug( 1, "RadosFsFileSystem::Truncate size=%llu" , (unsigned long long) size);
+	radosfs::File* radosFile = new radosfs::File(&radosfs::gRadosFs, path);
+
+	int retc=0;
+
+	if ( (!radosFile && (retc=-ENODEV)) || (retc=radosFile->truncate(size) )) {
+	  log->Debug( 1, "Called RadosFsFileSystem::Truncate retc=%lu", retc);
+	  return XRootDStatus( XrdCl::stError,
+			       XrdCl::errOSError,
+			       -retc,
+			       "radosfs error");
+	}
+
+	XRootDStatus* ret_st = new XRootDStatus( XrdCl::stOK,0,0,"");
+	handler->HandleResponse(ret_st, 0);
+	return XRootDStatus( XrdCl::stOK,0,0,"");
       }
 
       //------------------------------------------------------------------------
@@ -889,10 +899,21 @@ namespace
       {
         XrdCl::Log *log = DefaultEnv::GetLog();
         log->Debug( 1, "RadosFsFileSystem::Rm" );
-	return XRootDStatus( XrdCl::stError,
-			     XrdCl::errOSError,
-			     EOPNOTSUPP,
-			     "radosfs error");
+	radosfs::File* radosFile = new radosfs::File(&radosfs::gRadosFs, path);
+
+	int retc=0;
+
+	if ( (!radosFile && (retc=-ENODEV)) || (retc=radosFile->remove() )) {
+	  log->Debug( 1, "Called RadosFsFileSystem::Rm retc=%lu", retc);
+	  return XRootDStatus( XrdCl::stError,
+			       XrdCl::errOSError,
+			       -retc,
+			       "radosfs error");
+	}
+
+	XRootDStatus* ret_st = new XRootDStatus( XrdCl::stOK,0,0,"");
+	handler->HandleResponse(ret_st, 0);
+	return XRootDStatus( XrdCl::stOK,0,0,"");
       }
 
       //------------------------------------------------------------------------
