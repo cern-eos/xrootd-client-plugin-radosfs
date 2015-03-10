@@ -18,12 +18,12 @@
 
 find_package(XRootD REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread)
-
+ 
 #-------------------------------------------------------------------------------
 # The XrdCl lib
 #-------------------------------------------------------------------------------
 
-include_directories ( ${XROOTD_INCLUDE_DIR} ./)
+include_directories ( ${Boost_INCLUDE_DIR} ${XROOTD_INCLUDE_DIR} ./)
 
 add_library(
   XrdClRadosFS-${PLUGIN_VERSION}
