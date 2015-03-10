@@ -84,6 +84,7 @@ add_custom_target(spec
   COMMAND cat ${SPEC_FILE_IN} | sed s/__VERSION_MAJOR__/${VERSION_MAJOR}/ |
           sed s/__VERSION_MINOR__/${VERSION_MINOR}/ |
           sed s/__VERSION_PATCH__/${VERSION_PATCH}/ |
+	  sed s/__PLUGIN_VERSION__/${PLUGIN_VERSION}/ |
           sed s/__RELEASE__/${RELEASE}/ > ${SPEC_FILE}
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
